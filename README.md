@@ -1,99 +1,76 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+# Solidity by Example ERC-20 Token (Code Version)
 
-contract ERC20 {
-    // Total supply of the token
-    uint public totalSupply;
+## Overview
 
-    // Balances of token holders
-    mapping(address => uint) public balanceOf;
+This repository contains a simple implementation of an ERC-20 token in Solidity, adhering to version ^0.8.17. The ERC-20 standard defines a set of rules for creating tokens on the Ethereum blockchain. The token, named "Solidity by Example" (symbol: SOLBYEX), includes standard functions such as `transfer`, `approve`, `transferFrom`, `mint`, and `burn`.
 
-    // Allowance mapping for delegated transfers
-    mapping(address => mapping(address => uint)) public allowance;
+## Contract Details
 
-    // Token details
-    string public name = "Solidity by Example";
-    string public symbol = "SOLBYEX";
-    uint8 public decimals = 18;
+- **Name:** Solidity by Example
+- **Symbol:** SOLBYEX
+- **Decimals:** 18
+- **Total Supply:** Variable, initialized to 0
 
-    // Events for logging important token-related activities
-    event Transfer(address indexed from, address indexed to, uint value);
-    event Approval(address indexed owner, address indexed spender, uint value);
+## Functions
 
-    /**
-     * @dev Transfers tokens from the caller to a recipient.
-     * @param recipient Address of the recipient.
-     * @param amount Amount of tokens to transfer.
-     * @return A boolean indicating the success of the transfer.
-     */
-    function transfer(address recipient, uint amount) external returns (bool) {
-        require(balanceOf[msg.sender] >= amount, "Insufficient balance");
+### `transfer`
 
-        balanceOf[msg.sender] -= amount;
-        balanceOf[recipient] += amount;
+```solidity
+function transfer(address recipient, uint amount) external returns (bool);
+```
 
-        emit Transfer(msg.sender, recipient, amount);
-        return true;
-    }
+Transfers `amount` tokens from the caller's account to the `recipient`. Emits a `Transfer` event.
 
-    /**
-     * @dev Approves a spender to spend a certain amount of tokens on behalf of the owner.
-     * @param spender Address of the spender.
-     * @param amount Amount of tokens to approve.
-     * @return A boolean indicating the success of the approval.
-     */
-    function approve(address spender, uint amount) external returns (bool) {
-        allowance[msg.sender][spender] = amount;
+### `approve`
 
-        emit Approval(msg.sender, spender, amount);
-        return true;
-    }
+```solidity
+function approve(address spender, uint amount) external returns (bool);
+```
 
-    /**
-     * @dev Transfers tokens from one address to another, given the approval.
-     * @param sender Address from which the tokens are transferred.
-     * @param recipient Address to which the tokens are transferred.
-     * @param amount Amount of tokens to transfer.
-     * @return A boolean indicating the success of the transfer.
-     */
-    function transferFrom(
-        address sender,
-        address recipient,
-        uint amount
-    ) external returns (bool) {
-        require(balanceOf[sender] >= amount, "Insufficient balance");
-        require(allowance[sender][msg.sender] >= amount, "Insufficient allowance");
+Allows `spender` to withdraw from the caller's account multiple times, up to the `amount` set. Emits an `Approval` event.
 
-        allowance[sender][msg.sender] -= amount;
-        balanceOf[sender] -= amount;
-        balanceOf[recipient] += amount;
+### `transferFrom`
 
-        emit Transfer(sender, recipient, amount);
-        return true;
-    }
+```solidity
+function transferFrom(address sender, address recipient, uint amount) external returns (bool);
+```
 
-    /**
-     * @dev Mints new tokens and adds them to the caller's balance.
-     * @param amount Amount of tokens to mint.
-     */
-    function mint(uint amount) external {
-        balanceOf[msg.sender] += amount;
-        totalSupply += amount;
+Transfers `amount` tokens from `sender` to `recipient`, given the allowance. Emits a `Transfer` event.
 
-        emit Transfer(address(0), msg.sender, amount);
-    }
+### `mint`
 
-    /**
-     * @dev Burns tokens, removing them from the caller's balance.
-     * @param amount Amount of tokens to burn.
-     */
-    function burn(uint amount) external {
-        require(balanceOf[msg.sender] >= amount, "Insufficient balance");
+```solidity
+function mint(uint amount) external;
+```
 
-        balanceOf[msg.sender] -= amount;
-        totalSupply -= amount;
+Mints (creates) `amount` new tokens and adds them to the caller's balance. Emits a `Transfer` event from the zero address.
 
-        emit Transfer(msg.sender, address(0), amount);
-    }
-}
+### `burn`
 
+```solidity
+function burn(uint amount) external;
+```
+
+Burns (destroys) `amount` tokens from the caller's balance. Emits a `Transfer` event to the zero address.
+
+## Events
+
+### `Transfer`
+
+```solidity
+event Transfer(address indexed from, address indexed to, uint value);
+```
+
+Emitted when tokens are transferred between addresses.
+
+### `Approval`
+
+```solidity
+event Approval(address indexed owner, address indexed spender, uint value);
+```
+
+Emitted when the allowance of a spender is set by the owner.
+
+```
+
+Make sure to replace the placeholder `[LICENSE](LICENSE)` with the appropriate link or text for your license file. Save this content in a file named `README.md` in the root directory of your repository.
